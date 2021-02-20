@@ -558,16 +558,16 @@ contract('BPool', async (accounts) => {
     });
 
     describe('BToken interactions', () => {
-        // it('Token descriptors', async () => {
-        //     const name = await pool.name();
-        //     assert.equal(name, 'Balancer Pool Token');
+        it('Token descriptors', async () => {
+            const name = await pool.name();
+            assert.equal(name, 'Balancer Pool Token');
 
-        //     const symbol = await pool.symbol();
-        //     assert.equal(symbol, 'BPT');
+            const symbol = await pool.symbol();
+            assert.equal(symbol, 'BPT');
 
-        //     const decimals = await pool.decimals();
-        //     assert.equal(decimals, 18);
-        // });
+            const decimals = await pool.decimals();
+            assert.equal(decimals, 18);
+        });
 
         it('Token allowances', async () => {
             await pool.approve(user1, toWei('50'));

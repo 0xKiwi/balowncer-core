@@ -16,7 +16,6 @@ pragma solidity 0.5.12;
 // Builds new BPools, logging their addresses and providing `isBPool(address) -> (bool)`
 
 import "./BPool.sol";
-import "./BProxy.sol";
 import "./BCreate2.sol";
 
 contract BFactory is BBronze {
@@ -68,6 +67,7 @@ contract BFactory is BBronze {
     constructor() public {
         _blabs = msg.sender;
         BPool bpool = new BPool();
+        bpool.initialize(address(0));
         bPoolImpl = address(bpool);
     }
 
