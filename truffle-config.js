@@ -23,7 +23,7 @@ module.exports = {
                     enabled: true,
                     runs: 100,
                 },
-                evmVersion: 'byzantium',
+                evmVersion: 'constantinople',
             },
         },
     },
