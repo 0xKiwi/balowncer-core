@@ -17,6 +17,7 @@ import "./BColor.sol";
 
 contract BConst is BBronze {
     address private SLOT_FOR_PROXY;
+
     uint public constant BONE              = 10**18;
 
     uint public constant MIN_BOUND_TOKENS  = 2;

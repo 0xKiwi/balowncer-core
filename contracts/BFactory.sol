@@ -48,7 +48,6 @@ contract BFactory is BBronze {
 
     function newBPool()
         external
-        payable
         returns (BPool)
     {
         bytes memory bytecode = type(InitializableProxy).creationCode;
