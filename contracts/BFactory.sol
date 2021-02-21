@@ -16,7 +16,6 @@ pragma solidity 0.5.12;
 // Builds new BPools, logging their addresses and providing `isBPool(address) -> (bool)`
 
 import "./BPool.sol";
-import "./BCreate2.sol";
 
 contract BFactory is BBronze {
     event LOG_NEW_POOL(
@@ -32,7 +31,6 @@ contract BFactory is BBronze {
     bytes4 private constant POOL_INIT_SIGNITURE = bytes4(keccak256("initialize(address)"));
 
     address public bPoolImpl;
-    uint256 public deployNonce;
     mapping(address=>bool) private _isBPool;
 
     function isBPool(address b)
@@ -49,10 +47,8 @@ contract BFactory is BBronze {
         external
         returns (BPool)
     {
-        bytes memory bytecode = type(InitializableProxy).creationCode;
-        // unique salt required for each protocol, salt + deployer decides contract address
-        bytes32 salt = keccak256(abi.encodePacked(deployNonce++));
-        address proxyAddr = BCreate2.deploy(salt, bytecode);
+        InitializableProxy proxy = new InitializableProxy();
+        address proxyAddr = address(proxy);
         bytes memory initData = abi.encodeWithSelector(POOL_INIT_SIGNITURE, address(this));
         InitializableProxy(make_payable(proxyAddr)).initialize(bPoolImpl, initData);
         BPool proxyPool = BPool(uint160(proxyAddr));
