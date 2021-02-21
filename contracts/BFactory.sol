@@ -43,7 +43,8 @@ contract BFactory is BBronze {
         external
         returns (BPool)
     {
-        address proxyAddr = Clones.cloneDeterministic(bPoolImpl, keccak256(abi.encodePacked(deployNonce++)));
+        bytes32 salt = keccak256(abi.encodePacked(address(this), deployNonce++));
+        address proxyAddr = Clones.cloneDeterministic(bPoolImpl, salt);
         BPool proxyPool = BPool(proxyAddr);
         proxyPool.initialize(address(this));
         _isBPool[proxyAddr] = true;
