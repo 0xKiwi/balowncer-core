@@ -54,6 +54,11 @@ contract('BFactory', async (accounts) => {
             assert.equal(hexToUtf8(color), 'BRONZE');
         });
 
+        it('deployNonce is incremented', async () => {
+            const deployNonce = await factory.deployNonce();
+            assert.equal(deployNonce, 1);
+        });
+
         it('isBPool on non pool returns false', async () => {
             const isBPool = await factory.isBPool(admin);
             assert.isFalse(isBPool);

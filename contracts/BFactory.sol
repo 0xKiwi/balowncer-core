@@ -16,6 +16,7 @@ pragma solidity 0.5.12;
 // Builds new BPools, logging their addresses and providing `isBPool(address) -> (bool)`
 
 import "./BPool.sol";
+import "./Clones.sol";
 
 contract BFactory is BBronze {
     event LOG_NEW_POOL(
@@ -28,6 +29,8 @@ contract BFactory is BBronze {
         address indexed blabs
     );
 
+    address public bPoolImpl;
+    uint256 public deployNonce;
     mapping(address=>bool) private _isBPool;
 
     function isBPool(address b)
@@ -40,17 +43,23 @@ contract BFactory is BBronze {
         external
         returns (BPool)
     {
-        BPool bpool = new BPool();
-        _isBPool[address(bpool)] = true;
-        emit LOG_NEW_POOL(msg.sender, address(bpool));
-        bpool.setController(msg.sender);
-        return bpool;
+        bytes32 salt = keccak256(abi.encodePacked(address(this), deployNonce++));
+        address proxyAddr = Clones.cloneDeterministic(bPoolImpl, salt);
+        BPool proxyPool = BPool(proxyAddr);
+        proxyPool.initialize(address(this));
+        _isBPool[proxyAddr] = true;
+        emit LOG_NEW_POOL(msg.sender, proxyAddr);
+        proxyPool.setController(msg.sender);
+        return proxyPool;
     }
 
     address private _blabs;
 
     constructor() public {
         _blabs = msg.sender;
+        BPool bpool = new BPool();
+        bpool.initialize(address(0));
+        bPoolImpl = address(bpool);
     }
 
     function getBLabs()

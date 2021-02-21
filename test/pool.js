@@ -73,6 +73,13 @@ contract('BPool', async (accounts) => {
             assert.equal(controller, admin);
         });
 
+        it('Fails if reinitialize is attempted', async () => {
+            await truffleAssert.reverts(
+                pool.initialize(user1),
+                'Initializable: contract is already initialized',
+            );
+        });
+
         it('Pool starts with no bound tokens', async () => {
             const numTokens = await pool.getNumTokens();
             assert.equal(0, numTokens);
