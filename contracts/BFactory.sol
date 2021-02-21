@@ -39,16 +39,12 @@ contract BFactory is BBronze {
         return _isBPool[b];
     }
 
-    function make_payable(address x) internal pure returns (address payable) {
-        return address(uint160(x));
-    }
-
     function newBPool()
         external
         returns (BPool)
     {
         address proxyAddr = Clones.cloneDeterministic(bPoolImpl, keccak256(abi.encodePacked(deployNonce++)));
-        BPool proxyPool = BPool(uint160(proxyAddr));
+        BPool proxyPool = BPool(proxyAddr);
         proxyPool.initialize(address(this));
         _isBPool[proxyAddr] = true;
         emit LOG_NEW_POOL(msg.sender, proxyAddr);
