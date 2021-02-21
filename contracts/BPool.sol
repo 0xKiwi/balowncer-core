@@ -15,7 +15,7 @@ pragma solidity 0.5.12;
 
 import "./BToken.sol";
 import "./BMath.sol";
-import "./BProxy.sol";
+import "./Address.sol";
 
 // SPDX-License-Identifier: MIT
 
