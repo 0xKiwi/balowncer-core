@@ -51,7 +51,7 @@ contract BFactory is BBronze {
     {
         bytes memory bytecode = type(InitializableProxy).creationCode;
         // unique salt required for each protocol, salt + deployer decides contract address
-        bytes32 salt = keccak256(abi.encodePacked(deployNonce));
+        bytes32 salt = keccak256(abi.encodePacked(deployNonce++));
         address proxyAddr = BCreate2.deploy(salt, bytecode);
         bytes memory initData = abi.encodeWithSelector(POOL_INIT_SIGNITURE, address(this));
         InitializableProxy(make_payable(proxyAddr)).initialize(bPoolImpl, initData);
